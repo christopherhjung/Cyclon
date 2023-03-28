@@ -9,7 +9,7 @@ public class IdentExpr implements Expr{
     private Expr expr;
 
     @Override
-    public Expr bind() {
+    public Expr reduce() {
         if(expr == null){
             throw new ParseException("Binding failed");
         }

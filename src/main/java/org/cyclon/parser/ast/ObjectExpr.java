@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.cyclon.mapper.Context;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,10 +14,10 @@ public class ObjectExpr implements Expr{
     private PairExpr[] pairs;
 
     @Override
-    public Expr bind() {
+    public Expr reduce() {
         var idx = 0;
         for(var elem : pairs){
-            pairs[idx++] = (PairExpr) elem.bind();
+            pairs[idx++] = (PairExpr) elem.reduce();
         }
 
         return this;

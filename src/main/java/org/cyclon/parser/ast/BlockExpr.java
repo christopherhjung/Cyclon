@@ -7,18 +7,18 @@ public class BlockExpr implements Expr{
     private Expr[] exprs;
 
     @Override
-    public Expr bind() {
+    public Expr reduce() {
         Expr last = null;
         for(var elem : exprs){
-            last = elem.bind();
+            last = elem.reduce();
         }
         return last;
     }
 
     @Override
-    public void scan() {
+    public void bind() {
         for(var elem : exprs){
-            elem.scan();
+            elem.bind();
         }
     }
 }

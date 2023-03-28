@@ -11,9 +11,9 @@ public class PairExpr implements Expr{
     private Expr value;
 
     @Override
-    public Expr bind() {
-        key = key.bind();
-        value = value.bind();
+    public Expr reduce() {
+        key = key.reduce();
+        value = value.reduce();
         return this;
     }
 }

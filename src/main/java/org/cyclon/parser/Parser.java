@@ -20,8 +20,8 @@ public class Parser {
         var lex = new Lexer(cyclon);
         var parser = new Parser(lex);
         var ast = parser.parse();
-        ast.scan();
-        return ast.bind();
+        ast.bind();
+        return ast.reduce();
     }
 
     private final Map<String, IdentExpr> idents = new HashMap<>();

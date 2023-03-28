@@ -2,7 +2,6 @@ package org.cyclon.parser.ast;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang3.NotImplementedException;
 import org.cyclon.mapper.Context;
 
 import java.lang.reflect.Array;
@@ -14,10 +13,10 @@ public class ListExpr implements Expr{
     private Expr[] elems;
 
     @Override
-    public Expr bind() {
+    public Expr reduce() {
         var idx = 0;
         for(var elem : elems){
-            elems[idx++] = elem.bind();
+            elems[idx++] = elem.reduce();
         }
         return this;
     }

@@ -10,12 +10,12 @@ public class AssignExpr implements Expr{
     private Expr value;
 
     @Override
-    public Expr bind() {
-        return value.bind();
+    public Expr reduce() {
+        return value.reduce();
     }
 
     @Override
-    public void scan() {
+    public void bind() {
         key.assign(value);
     }
 }

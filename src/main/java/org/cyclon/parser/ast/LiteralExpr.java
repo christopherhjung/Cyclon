@@ -10,7 +10,7 @@ public class LiteralExpr implements Expr{
     private final Object value;
 
     @Override
-    public Expr bind() {
+    public Expr reduce() {
         return this;
     }
 
