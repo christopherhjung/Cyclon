@@ -1,0 +1,17 @@
+n = "name";
+s = "succ";
+
+a = {
+  n: "name1",
+  s: [b, c]
+};
+
+b = {
+  n: "name2",
+  s: [b, a]
+};
+
+c = {
+  n: "name3",
+  s: [a, b]
+}

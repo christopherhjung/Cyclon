@@ -3,6 +3,7 @@ package org.cyclon.parser.ast;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.cyclon.mapper.Context;
+import org.cyclon.mapper.Unbinder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +16,16 @@ public class ObjectExpr implements Expr{
 
     @Override
     public Expr reduce() {
-        var idx = 0;
         for(var elem : pairs){
-            pairs[idx++] = (PairExpr) elem.reduce();
+            elem.reduce();
         }
 
         return this;
+    }
+
+    @Override
+    public Expr unbind(Unbinder unbinder) {
+        return unbinder.identify(this);
     }
 
     @Override
@@ -30,7 +35,7 @@ public class ObjectExpr implements Expr{
         }
 
         Object obj;
-        if(Map.class.isAssignableFrom(clazz)){
+        if(Map.class.isAssignableFrom(clazz) || Object.class.equals(clazz)){
             obj = deserializeMap(context);
         }else{
             obj = deserializePOJO(clazz, context);

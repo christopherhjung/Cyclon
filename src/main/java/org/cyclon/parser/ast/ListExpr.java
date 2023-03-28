@@ -27,11 +27,16 @@ public class ListExpr implements Expr{
             return (T)context.get(this);
         }
 
-        var arr = Array.newInstance(clazz.getComponentType(), elems.length);
+        var componentType = clazz.getComponentType();
+        if(componentType == null){
+            componentType = Object.class;
+        }
+
+        var arr = Array.newInstance(componentType, elems.length);
         context.put(this, arr);
         var idx = 0;
         for(var elem : elems){
-            Array.set(arr, idx++, elem.deserialize(Integer.class, context));
+            Array.set(arr, idx++, elem.deserialize(componentType, context));
         }
 
         context.remove(this);

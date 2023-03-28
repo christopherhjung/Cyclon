@@ -3,6 +3,7 @@ package org.cyclon.parser.ast;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.cyclon.mapper.Context;
+import org.cyclon.mapper.Unbinder;
 
 @AllArgsConstructor
 @Getter
@@ -11,6 +12,11 @@ public class LiteralExpr implements Expr{
 
     @Override
     public Expr reduce() {
+        return this;
+    }
+
+    @Override
+    public Expr unbind(Unbinder unbinder) {
         return this;
     }
 
