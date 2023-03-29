@@ -1,6 +1,7 @@
 package org.cyclon;
 
 import org.cyclon.mapper.Mapper;
+import org.cyclon.mapper.Unbinder;
 import org.cyclon.parser.Parser;
 import org.junit.Test;
 
@@ -31,7 +32,8 @@ public class FileParseTest {
     @Test
     public void cy(){
         var file = load("test.cyclon");
-        var dummy = Mapper.readValue(file, Map.class);
+        var dummy = Parser.parse(file);
+        var unbound = dummy.expand();
         System.out.println(dummy);
     }
 }

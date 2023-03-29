@@ -2,6 +2,7 @@ package org.cyclon.parser.ast;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.cyclon.mapper.Unbinder;
 
 
 @AllArgsConstructor
@@ -14,6 +15,13 @@ public class PairExpr implements Expr{
     public Expr reduce() {
         key = key.reduce();
         value = value.reduce();
+        return this;
+    }
+
+    @Override
+    public Expr expand(Unbinder unbinder) {
+        key = key.unbind(unbinder);
+        value = value.unbind(unbinder);
         return this;
     }
 }

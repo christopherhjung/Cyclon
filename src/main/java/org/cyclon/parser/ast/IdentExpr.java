@@ -24,9 +24,4 @@ public class IdentExpr implements Expr{
         }
         this.expr = value;
     }
-
-    @Override
-    public Expr unbind(Unbinder unbinder) {
-        throw new NotImplementedException("Not impl");
-    }
 }

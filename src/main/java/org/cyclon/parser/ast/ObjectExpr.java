@@ -24,6 +24,15 @@ public class ObjectExpr implements Expr{
     }
 
     @Override
+    public Expr expand(Unbinder unbinder) {
+        for(var elem : pairs){
+            elem.expand(unbinder);
+        }
+
+        return this;
+    }
+
+    @Override
     public Expr unbind(Unbinder unbinder) {
         return unbinder.identify(this);
     }

@@ -3,6 +3,7 @@ package org.cyclon.parser.ast;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.cyclon.mapper.Context;
+import org.cyclon.mapper.Unbinder;
 
 import java.lang.reflect.Array;
 
@@ -19,6 +20,20 @@ public class ListExpr implements Expr{
             elems[idx++] = elem.reduce();
         }
         return this;
+    }
+
+    @Override
+    public Expr expand(Unbinder unbinder) {
+        var idx = 0;
+        for(var elem : elems){
+            elems[idx++] = unbinder.identify(elem);
+        }
+        return this;
+    }
+
+    @Override
+    public Expr unbind(Unbinder unbinder) {
+        return unbinder.identify(this);
     }
 
     @Override
