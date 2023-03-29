@@ -2,6 +2,7 @@ package org.cyclon.parser.ast;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.cyclon.Visitor;
 import org.cyclon.mapper.Context;
 import org.cyclon.mapper.Unbinder;
 
@@ -21,7 +22,17 @@ public class LiteralExpr implements Expr{
     }
 
     @Override
+    public Expr expand(Unbinder unbinder) {
+        return this;
+    }
+
+    @Override
     public <T> T deserialize(Class<T> clazz, Context context) {
         return (T)value;
+    }
+
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.visitLiteral(this);
     }
 }

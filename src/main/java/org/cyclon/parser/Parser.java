@@ -86,12 +86,16 @@ public class Parser {
     private Expr parseBlock(){
         var exprs = new ArrayList<Expr>();
 
-        if(!accept(Token.Kind.EOL)){
-            exprs.add(parseExpr());
-            while(!accept(Token.Kind.EOL)){
-                expect(Token.Kind.Semi);
-                exprs.add(parseExpr());
+        var valid = true;
+        while(!accept(Token.Kind.EOL)){
+            if(!valid){
+                throw new ParseException("Expected ; separator");
             }
+            exprs.add(parseExpr());
+            valid = false;
+            while(accept(Token.Kind.Semi)){
+                valid = true;
+            };
         }
 
         return new BlockExpr(exprs.toArray(new Expr[0]));

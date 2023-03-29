@@ -1,8 +1,11 @@
 package org.cyclon.parser.ast;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.cyclon.Visitor;
 
 @AllArgsConstructor
+@Getter
 public class BlockExpr implements Expr{
     private Expr[] exprs;
 
@@ -20,5 +23,10 @@ public class BlockExpr implements Expr{
         for(var elem : exprs){
             elem.bind();
         }
+    }
+
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.visitBlock(this);
     }
 }

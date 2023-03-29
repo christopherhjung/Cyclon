@@ -3,15 +3,15 @@ s = "succ";
 
 a = {
   n: "name1",
-  s: [b, c]
+  s: []
 };
 
 b = {
   n: "name2",
-  s: [b, a]
+  s: [a]
 };
 
 c = {
   n: "name3",
   s: [a, b]
-}
+};

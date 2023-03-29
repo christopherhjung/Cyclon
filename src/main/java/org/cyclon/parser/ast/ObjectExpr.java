@@ -2,6 +2,7 @@ package org.cyclon.parser.ast;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.cyclon.Visitor;
 import org.cyclon.mapper.Context;
 import org.cyclon.mapper.Unbinder;
 
@@ -88,5 +89,10 @@ public class ObjectExpr implements Expr{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.visitObject(this);
     }
 }
