@@ -70,6 +70,25 @@ public class MapperTest {
         assertEquals(3, dummy[2]);
     }
 
+    @Test
+    public void serialize(){
+        var dummy = new PrimaryDummy("test", 42, true);
+        var str = Mapper.writeValue(dummy);
+        var dummyParsed = Mapper.readValue(str, PrimaryDummy.class);
+        assertIdentical(dummy, dummyParsed);
+    }
+
+    @Test
+    public void serializeCyclic(){
+        var dummy = new CyclicDummy(null, 10);
+        dummy.setParent(dummy);
+        var str = Mapper.writeValue(dummy);
+        var dummyParsed = Mapper.readValue(str, CyclicDummy.class);
+        assertIdentical(dummy, dummyParsed);
+        assertSame(dummyParsed, dummyParsed.getParent());
+        assertEquals(dummy.getNumber(), dummyParsed.getNumber());
+    }
+
     private void assertIdentical(Object expected, Object actual){
         assertThat(actual)
                 .usingRecursiveComparison()

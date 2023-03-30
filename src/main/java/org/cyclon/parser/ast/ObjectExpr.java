@@ -2,6 +2,7 @@ package org.cyclon.parser.ast;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.cyclon.visitor.ResultVisitor;
 import org.cyclon.visitor.Visitor;
 import org.cyclon.mapper.Context;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Getter
+@Setter
 public class ObjectExpr implements Expr{
     private PairExpr[] pairs;
 
