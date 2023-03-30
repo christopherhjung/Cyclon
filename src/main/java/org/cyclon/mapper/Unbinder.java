@@ -32,15 +32,12 @@ public class Unbinder {
         var current = identCounter++;
         var sb = new StringBuilder();
         int radix = 52;
-        while(true){
+        do {
             var remainder = current % radix;
             sb.append(CHARS[remainder]);
             current /= radix;
             radix = 62;
-            if(current == 0){
-                break;
-            }
-        }
+        } while (current != 0);
         return sb.toString();
     }
 
@@ -61,13 +58,8 @@ public class Unbinder {
 
     public Expr toBlock(IdentExpr root){
         var assigns = map.values();
-        for(var assign : assigns){
-            assign.getKey().toggle(assign.getValue());
-        }
-
-        for (var expr : assigns) {
-            expr.reduce();
-        }
+        assigns.forEach(it -> it.getKey().toggle(it.getValue()));
+        assigns.forEach(Expr::reduce);
 
         var exprs = new ArrayList<Expr>();
         for(var assign : assigns){
