@@ -1,8 +1,6 @@
 package org.cyclon.parser.ast;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.cyclon.visitor.*;
-import org.cyclon.mapper.Context;
 
 public interface Expr {
     void visit(Visitor visitor);
@@ -19,8 +17,8 @@ public interface Expr {
         var deserializer = new Deserializer();
         return deserializer.deserialize(this, clazz);
     }
-    default String serialize(){
-        var serializer = new Serializer();
-        return serializer.serialize(this);
+    default String stringify(){
+        var stringifier = new Stringifier();
+        return stringifier.stringify(this);
     }
 }

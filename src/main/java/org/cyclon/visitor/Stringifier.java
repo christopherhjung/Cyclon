@@ -2,13 +2,13 @@ package org.cyclon.visitor;
 
 import org.cyclon.parser.ast.*;
 
-public class Serializer implements Visitor{
+public class Stringifier implements Visitor{
     private static final int WIDTH = 4;
     private final StringBuilder sb = new StringBuilder();
     private int depth = 0;
     private boolean init = true;
 
-    public String serialize(Expr expr){
+    public String stringify(Expr expr){
         sb.setLength(0);
         expr.visit(this);
         return sb.toString();

@@ -2,7 +2,6 @@ package org.cyclon;
 
 import org.cyclon.mapper.Mapper;
 import org.cyclon.parser.Parser;
-import org.cyclon.visitor.Serializer;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -34,6 +33,6 @@ public class FileParseTest {
         var file = load("test.cyclon");
         var dummy = Parser.parse(file);
         var unbound = dummy.expand();
-        System.out.println(unbound.serialize());
+        System.out.println(unbound.stringify());
     }
 }
