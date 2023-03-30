@@ -14,11 +14,6 @@ public class AssignExpr implements Expr{
     private Expr value;
 
     @Override
-    public void bind() {
-        key.assign(value, true);
-    }
-
-    @Override
     public void visit(Visitor visitor) {
         visitor.visitAssign(this);
     }

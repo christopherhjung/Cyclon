@@ -10,7 +10,6 @@ import org.cyclon.mapper.Context;
 public interface Expr {
     void visit(Visitor visitor);
     <T> T visit(ResultVisitor<T> visitor);
-    default void bind(){}
     default Expr expand(){
         var expander = new Expander();
         return expander.expand(this);

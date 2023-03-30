@@ -11,13 +11,6 @@ public class BlockExpr implements Expr{
     private Expr[] exprs;
 
     @Override
-    public void bind() {
-        for(var elem : exprs){
-            elem.bind();
-        }
-    }
-
-    @Override
     public void visit(Visitor visitor) {
         visitor.visitBlock(this);
     }

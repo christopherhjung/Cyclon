@@ -4,6 +4,7 @@ import org.cyclon.exception.ParseException;
 import org.cyclon.lexer.Lexer;
 import org.cyclon.lexer.Token;
 import org.cyclon.parser.ast.*;
+import org.cyclon.visitor.Binder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,8 +21,8 @@ public class Parser {
         var lex = new Lexer(cyclon);
         var parser = new Parser(lex);
         var ast = parser.parse();
-        ast.bind();
-
+        var binder = new Binder();
+        binder.bind(ast);
         return ast.reduce();
     }
 
