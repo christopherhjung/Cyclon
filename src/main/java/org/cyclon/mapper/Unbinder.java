@@ -1,6 +1,5 @@
 package org.cyclon.mapper;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.cyclon.parser.ast.AssignExpr;
 import org.cyclon.parser.ast.BlockExpr;
 import org.cyclon.parser.ast.Expr;
@@ -11,35 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Unbinder {
-    private int identCounter;
-    private Map<Expr, AssignExpr> map = new HashMap<>();
-
-    private static char[] CHARS = new char[2 * 26 + 10];
-
-    static{
-        for(var i = 0; i < CHARS.length ; i++ ){
-            if(i < 26){
-                CHARS[i] = (char)(i + 'a');
-            }else if(i < 52){
-                CHARS[i] = (char)(i - 26 + 'A');
-            }else{
-                CHARS[i] = (char)(i - 36 + '0');
-            }
-        }
-    }
-
-    public String nextIdentifier(){
-        var current = identCounter++;
-        var sb = new StringBuilder();
-        int radix = 52;
-        do {
-            var remainder = current % radix;
-            sb.append(CHARS[remainder]);
-            current /= radix;
-            radix = 62;
-        } while (current != 0);
-        return sb.toString();
-    }
+    private final IdentFactory factory = new IdentFactoryImpl();
+    private final Map<Expr, AssignExpr> map = new HashMap<>();
 
     public IdentExpr identify(Expr expr){
         var assignExpr = map.get(expr);
@@ -65,7 +37,7 @@ public class Unbinder {
         for(var assign : assigns){
             var key = assign.getKey();
             if(key.getExpr() == null){
-                key.setKey(nextIdentifier());
+                key.setKey(factory.next());
                 exprs.add(assign);
             }
         }
