@@ -2,11 +2,8 @@ package org.cyclon.visitor;
 
 import org.cyclon.parser.ast.*;
 
-public class PrettyStringifier implements Visitor, Stringifier{
-    private static final int WIDTH = 4;
+public class CompactStringifier implements Visitor, Stringifier{
     private final StringBuilder sb = new StringBuilder();
-    private int depth = 0;
-    private boolean init = true;
 
     @Override
     public String stringify(Expr expr){
@@ -15,27 +12,7 @@ public class PrettyStringifier implements Visitor, Stringifier{
         return sb.toString();
     }
 
-    private void increase(){
-        depth+=WIDTH;
-        nl();
-    }
-
-    private void decrease(){
-        depth-=WIDTH;
-        nl();
-    }
-
-    private void nl(){
-        sb.append("\n");
-        init = true;
-    }
-
     private void print(String str){
-        if(init){
-            init = false;
-            sb.append(" ".repeat(depth));
-        }
-
         sb.append(str);
     }
 
@@ -43,17 +20,14 @@ public class PrettyStringifier implements Visitor, Stringifier{
     public void visitList(ListExpr list) {
         print("[");
         if(list.getElems().length > 0){
-            increase();
             boolean remaining = false;
             for(var elem : list.getElems()){
                 if(remaining){
                     print(",");
-                    nl();
                 }
                 remaining = true;
                 elem.visit(this);
             }
-            decrease();
         }
         print("]");
     }
@@ -62,17 +36,14 @@ public class PrettyStringifier implements Visitor, Stringifier{
     public void visitObject(ObjectExpr obj) {
         print("{");
         if(obj.getPairs().length > 0) {
-            increase();
             boolean remaining = false;
             for (var pair : obj.getPairs()) {
                 if (remaining) {
                     print(",");
-                    nl();
                 }
                 remaining = true;
                 pair.visit(this);
             }
-            decrease();
         }
         print("}");
     }
@@ -97,7 +68,7 @@ public class PrettyStringifier implements Visitor, Stringifier{
     @Override
     public void visitAssign(AssignExpr assign) {
         assign.getKey().visit(this);
-        print(" = ");
+        print("=");
         assign.getValue().visit(this);
     }
 
@@ -107,7 +78,6 @@ public class PrettyStringifier implements Visitor, Stringifier{
         for(var expr : block.getExprs()){
             if(remaining){
                 print(";");
-                nl();
             }
             expr.visit(this);
             remaining = true;
@@ -117,7 +87,7 @@ public class PrettyStringifier implements Visitor, Stringifier{
     @Override
     public void visitPair(PairExpr pair) {
         pair.getKey().visit(this);
-        print(" : ");
+        print(":");
         pair.getValue().visit(this);
     }
 }

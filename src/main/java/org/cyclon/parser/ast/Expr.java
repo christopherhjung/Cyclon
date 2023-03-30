@@ -17,8 +17,13 @@ public interface Expr {
         var deserializer = new Deserializer();
         return deserializer.deserialize(this, clazz);
     }
-    default String stringify(){
-        var stringifier = new Stringifier();
+    default String stringify(boolean pretty){
+        Stringifier stringifier;
+        if(pretty){
+            stringifier = new PrettyStringifier();
+        }else{
+            stringifier = new CompactStringifier();
+        }
         return stringifier.stringify(this);
     }
 }

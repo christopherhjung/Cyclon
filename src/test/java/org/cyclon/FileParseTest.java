@@ -33,6 +33,6 @@ public class FileParseTest {
         var file = load("test.cyclon");
         var dummy = Parser.parse(file);
         var unbound = dummy.expand();
-        System.out.println(unbound.stringify());
+        System.out.println(unbound.stringify(true));
     }
 }

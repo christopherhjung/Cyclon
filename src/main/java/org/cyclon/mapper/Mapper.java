@@ -13,6 +13,6 @@ public class Mapper {
         var serializer = new Serializer();
         var expr = serializer.serialize(obj);
         var expanded = expr.expand();
-        return expanded.stringify();
+        return expanded.stringify(true);
     }
 }
