@@ -1,12 +1,14 @@
 package org.cyclon.parser.ast;
 
 import org.apache.commons.lang3.NotImplementedException;
+import org.cyclon.ResultVisitor;
 import org.cyclon.Visitor;
 import org.cyclon.mapper.Context;
 import org.cyclon.mapper.Unbinder;
 
 public interface Expr {
     void visit(Visitor visitor);
+    <T> T visit(ResultVisitor<T> visitor);
     default void bind(){}
     default Expr expand(){
         var unbinder = new Unbinder();

@@ -2,6 +2,7 @@ package org.cyclon.parser.ast;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.cyclon.ResultVisitor;
 import org.cyclon.Visitor;
 import org.cyclon.exception.ParseException;
 
@@ -38,5 +39,10 @@ public class IdentExpr implements Expr{
     @Override
     public void visit(Visitor visitor) {
         visitor.visitIdent(this);
+    }
+
+    @Override
+    public <T> T visit(ResultVisitor<T> visitor) {
+        return visitor.visitIdent(this);
     }
 }
