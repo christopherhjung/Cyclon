@@ -1,5 +1,6 @@
 package org.cyclon.parser;
 
+import org.cyclon.Reducer;
 import org.cyclon.exception.ParseException;
 import org.cyclon.lexer.Lexer;
 import org.cyclon.lexer.Token;
@@ -21,6 +22,7 @@ public class Parser {
         var parser = new Parser(lex);
         var ast = parser.parse();
         ast.bind();
+
         return ast.reduce();
     }
 

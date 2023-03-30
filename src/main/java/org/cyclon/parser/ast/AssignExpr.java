@@ -14,11 +14,6 @@ public class AssignExpr implements Expr{
     private Expr value;
 
     @Override
-    public Expr reduce() {
-        return value.reduce();
-    }
-
-    @Override
     public void bind() {
         key.assign(value, true);
     }

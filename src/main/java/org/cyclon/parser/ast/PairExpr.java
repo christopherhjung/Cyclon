@@ -16,13 +16,6 @@ public class PairExpr implements Expr{
     private Expr value;
 
     @Override
-    public Expr reduce() {
-        key = key.reduce();
-        value = value.reduce();
-        return this;
-    }
-
-    @Override
     public Expr expand(Unbinder unbinder) {
         key = key.unbind(unbinder);
         value = value.unbind(unbinder);

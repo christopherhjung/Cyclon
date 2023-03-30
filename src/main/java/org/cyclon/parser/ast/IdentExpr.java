@@ -20,11 +20,6 @@ public class IdentExpr implements Expr{
         this.key = key;
     }
 
-    @Override
-    public Expr reduce() {
-        return expr == null ? this : expr;
-    }
-
     public void assign(Expr value, boolean check){
         if(expr != null && check){
             throw new ParseException("Double assign");

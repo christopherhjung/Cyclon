@@ -16,15 +16,6 @@ public class ListExpr implements Expr{
     private Expr[] elems;
 
     @Override
-    public Expr reduce() {
-        var idx = 0;
-        for(var elem : elems){
-            elems[idx++] = elem.reduce();
-        }
-        return this;
-    }
-
-    @Override
     public Expr expand(Unbinder unbinder) {
         var idx = 0;
         for(var elem : elems){

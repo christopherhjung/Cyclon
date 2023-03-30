@@ -17,15 +17,6 @@ public class ObjectExpr implements Expr{
     private PairExpr[] pairs;
 
     @Override
-    public Expr reduce() {
-        for(var elem : pairs){
-            elem.reduce();
-        }
-
-        return this;
-    }
-
-    @Override
     public Expr expand(Unbinder unbinder) {
         for(var elem : pairs){
             elem.expand(unbinder);

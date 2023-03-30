@@ -13,11 +13,6 @@ public class LiteralExpr implements Expr{
     private final Object value;
 
     @Override
-    public Expr reduce() {
-        return this;
-    }
-
-    @Override
     public Expr unbind(Unbinder unbinder) {
         return this;
     }
