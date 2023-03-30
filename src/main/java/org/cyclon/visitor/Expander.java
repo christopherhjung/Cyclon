@@ -12,7 +12,7 @@ public class Expander implements ResultVisitor<Expr>{
 
     public Expr expand(Expr expr){
         var ident = unbinder.identify(expr);
-        return unbinder.toBlock(ident);
+        return unbinder.collect(ident);
     }
 
     @Override

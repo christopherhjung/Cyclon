@@ -30,7 +30,7 @@ public class Unbinder implements ResultVisitor<Expr>{
         return ident;
     }
 
-    public Expr toBlock(IdentExpr root){
+    public Expr collect(IdentExpr root){
         var assigns = map.values();
         assigns.forEach(it -> it.getKey().toggle(it.getValue()));
         assigns.forEach(Expr::reduce);
