@@ -2,8 +2,8 @@ package org.cyclon.parser.ast;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.cyclon.ResultVisitor;
-import org.cyclon.Visitor;
+import org.cyclon.visitor.ResultVisitor;
+import org.cyclon.visitor.Visitor;
 import org.cyclon.exception.ParseException;
 
 @Getter

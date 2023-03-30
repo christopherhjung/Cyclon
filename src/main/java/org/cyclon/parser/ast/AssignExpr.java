@@ -3,8 +3,8 @@ package org.cyclon.parser.ast;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.cyclon.ResultVisitor;
-import org.cyclon.Visitor;
+import org.cyclon.visitor.ResultVisitor;
+import org.cyclon.visitor.Visitor;
 
 @AllArgsConstructor
 @Getter

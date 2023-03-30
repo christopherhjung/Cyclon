@@ -3,10 +3,8 @@ package org.cyclon.parser.ast;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.cyclon.ResultVisitor;
-import org.cyclon.Visitor;
-import org.cyclon.mapper.Unbinder;
-
+import org.cyclon.visitor.ResultVisitor;
+import org.cyclon.visitor.Visitor;
 
 @AllArgsConstructor
 @Getter
@@ -14,13 +12,6 @@ import org.cyclon.mapper.Unbinder;
 public class PairExpr implements Expr{
     private Expr key;
     private Expr value;
-
-    @Override
-    public Expr expand(Unbinder unbinder) {
-        key = key.unbind(unbinder);
-        value = value.unbind(unbinder);
-        return this;
-    }
 
     @Override
     public void visit(Visitor visitor) {

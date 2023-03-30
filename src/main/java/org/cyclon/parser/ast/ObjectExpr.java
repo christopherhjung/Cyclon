@@ -2,10 +2,9 @@ package org.cyclon.parser.ast;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.cyclon.ResultVisitor;
-import org.cyclon.Visitor;
+import org.cyclon.visitor.ResultVisitor;
+import org.cyclon.visitor.Visitor;
 import org.cyclon.mapper.Context;
-import org.cyclon.mapper.Unbinder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,20 +14,6 @@ import java.util.Map;
 @Getter
 public class ObjectExpr implements Expr{
     private PairExpr[] pairs;
-
-    @Override
-    public Expr expand(Unbinder unbinder) {
-        for(var elem : pairs){
-            elem.expand(unbinder);
-        }
-
-        return this;
-    }
-
-    @Override
-    public Expr unbind(Unbinder unbinder) {
-        return unbinder.identify(this);
-    }
 
     @Override
     public <T> T deserialize(Class<T> clazz, Context context) {

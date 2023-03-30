@@ -1,9 +1,8 @@
-package org.cyclon;
+package org.cyclon.visitor;
 
 import org.cyclon.parser.ast.*;
 
-public class Expander implements Visitor{
-    private Expr result;
+public class Binder implements Visitor{
     @Override
     public void visitList(ListExpr list) {
 
@@ -36,10 +35,6 @@ public class Expander implements Visitor{
 
     @Override
     public void visitPair(PairExpr block) {
-        block.getKey().visit(this);
-        block.setKey(result);
-        block.getValue().visit(this);
-        block.setKey(result);
-        result = block;
+
     }
 }

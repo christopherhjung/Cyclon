@@ -1,17 +1,21 @@
-package org.cyclon.mapper;
+package org.cyclon.visitor;
 
-import org.cyclon.parser.ast.AssignExpr;
-import org.cyclon.parser.ast.BlockExpr;
-import org.cyclon.parser.ast.Expr;
-import org.cyclon.parser.ast.IdentExpr;
+import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.NotImplementedException;
+import org.cyclon.mapper.IdentFactory;
+import org.cyclon.mapper.IdentFactoryImpl;
+import org.cyclon.parser.ast.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Unbinder {
+@AllArgsConstructor
+public class Unbinder implements ResultVisitor<Expr>{
     private final IdentFactory factory = new IdentFactoryImpl();
     private final Map<Expr, AssignExpr> map = new HashMap<>();
+
+    private Expander expander;
 
     public IdentExpr identify(Expr expr){
         var assignExpr = map.get(expr);
@@ -24,7 +28,7 @@ public class Unbinder {
         var ident = new IdentExpr(null);
         assignExpr = new AssignExpr(ident, null);
         map.put(expr, assignExpr);
-        assignExpr.setValue(expr.expand(this));
+        assignExpr.setValue(expr.visit(expander));
         return ident;
     }
 
@@ -49,5 +53,40 @@ public class Unbinder {
 
         exprs.add(normalizedRoot);
         return new BlockExpr(exprs.toArray(Expr[]::new));
+    }
+
+    @Override
+    public Expr visitLiteral(LiteralExpr literal) {
+        return literal;
+    }
+
+    @Override
+    public Expr visitList(ListExpr list) {
+        return identify(list);
+    }
+
+    @Override
+    public Expr visitObject(ObjectExpr obj) {
+        return identify(obj);
+    }
+
+    @Override
+    public Expr visitPair(PairExpr block) {
+        throw new NotImplementedException("Not supported");
+    }
+
+    @Override
+    public Expr visitIdent(IdentExpr ident) {
+        throw new NotImplementedException("Not supported");
+    }
+
+    @Override
+    public Expr visitAssign(AssignExpr assign) {
+        throw new NotImplementedException("Not supported");
+    }
+
+    @Override
+    public Expr visitBlock(BlockExpr block) {
+        throw new NotImplementedException("Not supported");
     }
 }

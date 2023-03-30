@@ -1,4 +1,4 @@
-package org.cyclon;
+package org.cyclon.visitor;
 
 import org.cyclon.parser.ast.*;
 
