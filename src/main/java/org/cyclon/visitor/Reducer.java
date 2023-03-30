@@ -2,66 +2,60 @@ package org.cyclon.visitor;
 
 import org.cyclon.parser.ast.*;
 
-public class Reducer implements Visitor{
-    private Expr result;
-
-    public Expr getResult() {
-        return result;
+public class Reducer implements ResultVisitor<Expr>{
+    public Expr reduce(Expr expr) {
+        return expr.visit(this);
     }
 
     @Override
-    public void visitList(ListExpr list) {
+    public Expr visitList(ListExpr list) {
         var idx = 0;
         var elems = list.getElems();
         for(var elem : elems){
-            elem.visit(this);
-            elems[idx++] = result;
+            elems[idx++] = elem.visit(this);
         }
-        result = list;
+        return list;
     }
 
     @Override
-    public void visitObject(ObjectExpr obj) {
+    public Expr visitObject(ObjectExpr obj) {
         for(var elem : obj.getPairs()){
             elem.visit(this);
         }
 
-        result = obj;
+        return obj;
     }
 
     @Override
-    public void visitLiteral(LiteralExpr literal) {
-        result = literal;
+    public Expr visitLiteral(LiteralExpr literal) {
+        return literal;
     }
 
     @Override
-    public void visitIdent(IdentExpr ident) {
-        result = ident.getExpr() == null ?
+    public Expr visitIdent(IdentExpr ident) {
+        return ident.getExpr() == null ?
                 ident :
                 ident.getExpr();
     }
 
     @Override
-    public void visitAssign(AssignExpr assign) {
-        assign.getValue().visit(this);
+    public Expr visitAssign(AssignExpr assign) {
+        return assign.getValue().visit(this);
     }
 
     @Override
-    public void visitBlock(BlockExpr block) {
+    public Expr visitBlock(BlockExpr block) {
         Expr last = null;
         for(var elem : block.getExprs()){
-            elem.visit(this);
-            last = result;
+            last = elem.visit(this);
         }
-        result = last;
+        return last;
     }
 
     @Override
-    public void visitPair(PairExpr block) {
-        block.getKey().visit(this);
-        block.setKey(result);
-        block.getValue().visit(this);
-        block.setValue(result);
-        result = block;
+    public Expr visitPair(PairExpr block) {
+        block.setKey(block.getKey().visit(this));
+        block.setValue(block.getValue().visit(this));
+        return block;
     }
 }

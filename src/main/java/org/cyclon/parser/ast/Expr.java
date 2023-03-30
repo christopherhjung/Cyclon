@@ -17,8 +17,7 @@ public interface Expr {
     }
     default Expr reduce(){
         var reducer = new Reducer();
-        visit(reducer);
-        return reducer.getResult();
+        return reducer.reduce(this);
     };
     default <T> T deserialize(Class<T> clazz, Context context){
         throw new NotImplementedException("Not implemented!");
