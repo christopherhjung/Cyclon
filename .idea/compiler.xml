@@ -10,12 +10,12 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.26/lombok-1.18.26.jar" />
         </processorPath>
-        <module name="cyclon" />
+        <module name="Cyon" />
         <module name="ScriptEngine" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="cyclon" target="11" />
+      <module name="Cyon" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
