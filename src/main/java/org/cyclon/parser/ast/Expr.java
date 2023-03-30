@@ -19,7 +19,8 @@ public interface Expr {
         var deserializer = new Deserializer();
         return deserializer.deserialize(this, clazz);
     }
-    default IdentExpr serialize(StringBuilder sb, Context context){
-        throw new NotImplementedException("Not implemented!");
+    default String serialize(){
+        var serializer = new Serializer();
+        return serializer.serialize(this);
     }
 }

@@ -2,11 +2,17 @@ package org.cyclon.visitor;
 
 import org.cyclon.parser.ast.*;
 
-public class Stringify implements Visitor{
+public class Serializer implements Visitor{
     private static final int WIDTH = 4;
     private final StringBuilder sb = new StringBuilder();
     private int depth = 0;
     private boolean init = true;
+
+    public String serialize(Expr expr){
+        sb.setLength(0);
+        expr.visit(this);
+        return sb.toString();
+    }
 
     private void increase(){
         depth+=WIDTH;
@@ -116,10 +122,5 @@ public class Stringify implements Visitor{
         pair.getKey().visit(this);
         print(" : ");
         pair.getValue().visit(this);
-    }
-
-    @Override
-    public String toString() {
-        return sb.toString();
     }
 }
