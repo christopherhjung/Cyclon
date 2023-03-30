@@ -1,10 +1,7 @@
 package org.cyclon.parser.ast;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.cyclon.visitor.Expander;
-import org.cyclon.visitor.Reducer;
-import org.cyclon.visitor.ResultVisitor;
-import org.cyclon.visitor.Visitor;
+import org.cyclon.visitor.*;
 import org.cyclon.mapper.Context;
 
 public interface Expr {
@@ -18,8 +15,9 @@ public interface Expr {
         var reducer = new Reducer();
         return reducer.reduce(this);
     };
-    default <T> T deserialize(Class<T> clazz, Context context){
-        throw new NotImplementedException("Not implemented!");
+    default <T> T deserialize(Class<T> clazz){
+        var deserializer = new Deserializer();
+        return deserializer.deserialize(this, clazz);
     }
     default IdentExpr serialize(StringBuilder sb, Context context){
         throw new NotImplementedException("Not implemented!");

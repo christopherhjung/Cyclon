@@ -12,11 +12,6 @@ public class LiteralExpr implements Expr{
     private final Object value;
 
     @Override
-    public <T> T deserialize(Class<T> clazz, Context context) {
-        return (T)value;
-    }
-
-    @Override
     public void visit(Visitor visitor) {
         visitor.visitLiteral(this);
     }
