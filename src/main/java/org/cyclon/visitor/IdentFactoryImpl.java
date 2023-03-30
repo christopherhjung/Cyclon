@@ -1,4 +1,4 @@
-package org.cyclon.mapper;
+package org.cyclon.visitor;
 
 public class IdentFactoryImpl implements IdentFactory{
     private static final char[] CHARS = new char[2 * 26 + 10];

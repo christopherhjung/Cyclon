@@ -4,7 +4,7 @@ import org.cyclon.parser.ast.*;
 
 public class Stringify implements Visitor{
     private static final int WIDTH = 4;
-    private StringBuilder sb = new StringBuilder();
+    private final StringBuilder sb = new StringBuilder();
     private int depth = 0;
     private boolean init = true;
 

@@ -1,4 +1,4 @@
-package org.cyclon.mapper;
+package org.cyclon.visitor;
 
 public interface IdentFactory {
     String next();

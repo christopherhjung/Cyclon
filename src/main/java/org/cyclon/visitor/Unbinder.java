@@ -2,8 +2,6 @@ package org.cyclon.visitor;
 
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
-import org.cyclon.mapper.IdentFactory;
-import org.cyclon.mapper.IdentFactoryImpl;
 import org.cyclon.parser.ast.*;
 
 import java.util.ArrayList;
