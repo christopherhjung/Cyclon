@@ -27,6 +27,8 @@ public class Serializer{
             return serializeValue(obj);
         }else if(obj instanceof Collection<?>){
             return serializeCollection(obj);
+        }else if(obj instanceof Map<?,?>){
+            return serializeMap(obj);
         }
 
         return serializeObject(obj);
@@ -47,6 +49,22 @@ public class Serializer{
                 .toArray(Expr[]::new);
 
         expr.setElems(elems);
+        return expr;
+    }
+
+    private ObjectExpr serializeMap(Object obj){
+        var map = (Map<?,?>) obj;
+        var expr = new ObjectExpr(null);
+        this.map.put(obj, expr);
+        var pairs = map.entrySet()
+                .stream()
+                .map(it -> new PairExpr(
+                    serialize(it.getKey()),
+                    serialize(it.getValue())
+                ))
+                .toArray(PairExpr[]::new);
+
+        expr.setPairs(pairs);
         return expr;
     }
 
