@@ -28,14 +28,14 @@ public class Parser {
 
     private final Map<String, IdentExpr> idents = new HashMap<>();
     private final Lexer lexer;
-    private Token token;
+    private Token.Kind token;
 
     private Parser(Lexer lexer){
         this.lexer = lexer;
-        next();
+        shift();
     }
 
-    private Token peek(){
+    private Token.Kind peek(){
         return token;
     }
 
@@ -43,14 +43,8 @@ public class Parser {
         token = lexer.next();
     }
 
-    private Token next(){
-        var prev = token;
-        shift();
-        return prev;
-    }
-
     private boolean is(Token.Kind kind){
-        return peek().getKind() == kind;
+        return peek() == kind;
     }
 
     private boolean accept(Token.Kind kind){
@@ -76,7 +70,8 @@ public class Parser {
 
     private IdentExpr parseIdent(boolean expect){
         if(is(Token.Kind.Ident)){
-            var symbol = next().getSymbol();
+            var symbol = lexer.getSymbol();
+            shift();
             return idents.computeIfAbsent(symbol, IdentExpr::new);
         }else if(expect){
             throw new ParseException("Expected identifier");
@@ -139,15 +134,15 @@ public class Parser {
     }
 
     private Expr parseValueExpr(){
-        var kind = peek().getKind();
+        var kind = peek();
         switch (kind){
             case LeftBrace: return parseObject();
             case LeftBracket: return parseList();
         }
 
-        var symbol = peek().getSymbol();
+        var symbol = lexer.getSymbol();
         Object value;
-        switch (peek().getKind()){
+        switch (peek()){
             case String:
                 value = symbol;
                 break;
@@ -166,7 +161,7 @@ public class Parser {
             }
             default: throw new ParseException("Expected Identifier, String, Boolean, Number or Null!");
         }
-        next();
+        shift();
         return new LiteralExpr(value);
     }
 

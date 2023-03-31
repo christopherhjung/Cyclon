@@ -10,10 +10,15 @@ public class Lexer {
     private int mark = 0;
     private int curr;
     private Token.Enter enter;
+    private String symbol;
 
     public Lexer(String code){
         this.chars = code.toCharArray();
         shift();
+    }
+
+    public String getSymbol() {
+        return symbol;
     }
 
     private void shift(){
@@ -103,12 +108,12 @@ public class Lexer {
         }
     }
 
-    public Token next(){
+    public Token.Kind next(){
         while(!isEOL()){
             enter = acceptWhitespace();
 
             var sign = parseSign();
-            if(sign != null) return token(sign);
+            if(sign != null) return sign;
 
             if(accept('\"')){
                 return acceptString();
@@ -130,7 +135,8 @@ public class Lexer {
                     }
                 }
 
-                return token(kind, getString());
+                symbol = getString();
+                return kind;
             }
 
             if(isAlpha()){
@@ -141,14 +147,14 @@ public class Lexer {
                     shift();
                 }
 
-                var value = getString();
-                switch (value) {
+                symbol = getString();
+                switch (symbol) {
                     case "true":
-                    case "false": return token(Token.Kind.Boolean, value);
-                    case "null": return token(Token.Kind.Null);
+                    case "false": return Token.Kind.Boolean;
+                    case "null": return Token.Kind.Null;
                 }
 
-                return token(Token.Kind.Ident, value);
+                return Token.Kind.Ident;
             }
 
             if( accept('/') ){
@@ -156,7 +162,7 @@ public class Lexer {
                     var depth = 1;
                     while(true) {
                         if(isEOL()){
-                            return token(Token.Kind.Error);
+                            return Token.Kind.Error;
                         }
 
                         if(accept('/')){
@@ -181,7 +187,7 @@ public class Lexer {
                 if(accept('/')) {
                     while(true) {
                         if(isEOL()){
-                            return token(Token.Kind.Error);
+                            return Token.Kind.Error;
                         }
 
                         if(accept('\n')){
@@ -192,48 +198,55 @@ public class Lexer {
                     }
                     continue;
                 }
-                return token(Token.Kind.Error);
+                return Token.Kind.Error;
             }
 
             if(isEOL()){
-                return token(Token.Kind.EOL);
+                return Token.Kind.EOL;
             }
 
-            return token(Token.Kind.Error);
+            return Token.Kind.Error;
         }
 
-        return token(Token.Kind.EOL);
+        return Token.Kind.EOL;
     }
 
-    private Token acceptString(){
+    private Token.Kind acceptString(){
         mark();
-        while(!accept('\"')){
-            if(isEOL()) return token(Token.Kind.Error);
-            if(accept('\\')) return acceptEscapingString();
-
+        loop: while(true){
+            switch (curr){
+                case '\"': break loop;
+                case '\\': return acceptEscapingString();
+                case -1: return Token.Kind.Error;
+            }
             shift();
         }
 
-        return token(Token.Kind.String, getString(1 ));
-    }
-
-    private Token acceptEscapingString(){
-        var sb = new StringBuilder(getString(1 ));
-
-        mark();
+        symbol = getString();
         shift();
-        while(!accept('\"')){
-            if(isEOL()) return token(Token.Kind.Error);
-            if(accept('\\')){
-                sb.append(getString(1 ));
-                mark();
+        return Token.Kind.String;
+    }
+
+    private Token.Kind acceptEscapingString(){
+        var sb = new StringBuilder();
+        loop: while(true){
+            switch (curr){
+                case '\"': break loop;
+                case '\\':
+                    sb.append(getString());
+                    shift();
+                    mark();
+                    break;
+                case -1: return Token.Kind.Error;
             }
 
             shift();
         }
 
-        sb.append(getString(1 ));
-        return token(Token.Kind.String, sb.toString());
+        sb.append(getString());
+        shift();
+        symbol = sb.toString();
+        return Token.Kind.String;
     }
 }
 
