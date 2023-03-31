@@ -1,8 +1,5 @@
 package org.cyon.core.lexer;
 
-import org.apache.commons.lang3.CharUtils;
-import org.apache.commons.lang3.StringUtils;
-
 
 public class Lexer {
     private final char[] chars;
@@ -25,7 +22,7 @@ public class Lexer {
         curr = ++idx >= chars.length ? -1 : chars[idx];
     }
 
-    private boolean isEOL(){
+    private boolean eol(){
         return idx >= chars.length;
     }
 
@@ -55,11 +52,7 @@ public class Lexer {
     }
 
     private String getString(){
-        return getString(0);
-    }
-
-    private String getString(int offset){
-        return new String(chars, mark, idx - mark - offset);
+        return new String(chars, mark, idx - mark);
     }
 
     private Token token(Token.Kind kind){
@@ -72,52 +65,58 @@ public class Lexer {
 
     private Token.Enter acceptWhitespace(){
         var enter = Token.Enter.Token;
-        while(true){
-            if(accept(' ') || accept('\t')){
-                if(enter == Token.Enter.Token){
+        loop: while(true){
+            switch (curr){
+                case ' ':
+                case '\t':
+                    shift();
                     enter = Token.Enter.Space;
-                }
-            }else if(accept('\n') || accept('\r')){
-                enter = Token.Enter.NL;
-            }else{
-                break;
+                    break;
+                case '\n':
+                case '\r':
+                    shift();
+                    enter = Token.Enter.NL;
+                    break loop;
+                default:
+                    return enter;
             }
         }
-        return enter;
+
+        while(true){
+            switch (curr){
+                case ' ':
+                case '\t':
+                case '\n':
+                case '\r':
+                    shift();
+                    break;
+                default:
+                    return enter;
+            }
+        }
     }
 
     private Token.Kind parseSign(){
-        var sign = parseSignImpl();
-        if(sign != null){
-            shift();
-        }
-        return sign;
-    }
-
-    private Token.Kind parseSignImpl(){
         switch (curr){
-            case '=': return Token.Kind.Assign;
-            case '{': return Token.Kind.LeftBrace;
-            case '}': return Token.Kind.RightBrace;
-            case '[': return Token.Kind.LeftBracket;
-            case ']': return Token.Kind.RightBracket;
-            case ',': return Token.Kind.Comma;
-            case ';': return Token.Kind.Semi;
-            case ':': return Token.Kind.Colon;
+            case '=': shift(); return Token.Kind.Assign;
+            case '{': shift(); return Token.Kind.LeftBrace;
+            case '}': shift(); return Token.Kind.RightBrace;
+            case '[': shift(); return Token.Kind.LeftBracket;
+            case ']': shift(); return Token.Kind.RightBracket;
+            case ',': shift(); return Token.Kind.Comma;
+            case ';': shift(); return Token.Kind.Semi;
+            case ':': shift(); return Token.Kind.Colon;
+            case '\"': return acceptString();
             default: return null;
         }
     }
 
     public Token.Kind next(){
-        while(!isEOL()){
+        while(!eol()){
             enter = acceptWhitespace();
 
             var sign = parseSign();
             if(sign != null) return sign;
-
-            if(accept('\"')){
-                return acceptString();
-            }
 
             if(isNumeric()){
                 mark();
@@ -158,50 +157,14 @@ public class Lexer {
             }
 
             if( accept('/') ){
-                if(accept('*') ){ // arbitrary comment
-                    var depth = 1;
-                    while(true) {
-                        if(isEOL()){
-                            return Token.Kind.Error;
-                        }
-
-                        if(accept('/')){
-                            if(accept('*')){
-                                depth += 1;
-                            }
-                        } else if(accept('*')){
-                            if(accept('/')){
-                                depth -= 1;
-                                if(depth == 0 ){
-                                    break;
-                                }
-                            }
-
-                            continue;
-                        }
-
-                        next();
-                    }
+                var comment = acceptComment();
+                if(comment == Token.Kind.Comment){
                     continue;
                 }
-                if(accept('/')) {
-                    while(true) {
-                        if(isEOL()){
-                            return Token.Kind.Error;
-                        }
-
-                        if(accept('\n')){
-                            break;
-                        } else {
-                            next();
-                        }
-                    }
-                    continue;
-                }
-                return Token.Kind.Error;
+                return comment;
             }
 
-            if(isEOL()){
+            if(eol()){
                 return Token.Kind.EOL;
             }
 
@@ -211,7 +174,44 @@ public class Lexer {
         return Token.Kind.EOL;
     }
 
+    private Token.Kind acceptComment(){
+        if(accept('*') ){ // arbitrary comment
+            var depth = 1;
+            while(true) {
+                if(eol()) return Token.Kind.Error;
+
+                if(accept('/')){
+                    if(accept('*')){
+                        depth += 1;
+                    }
+                } else if(accept('*')){
+                    if(accept('/')){
+                        depth -= 1;
+                        if(depth == 0 ){
+                            break;
+                        }
+                    }
+                }else{
+                    shift();
+                }
+            }
+            return Token.Kind.Comment;
+        }
+
+        if(accept('/')) {
+            while(!accept('\n')) {
+                if(eol()) return Token.Kind.Error;
+                shift();
+            }
+
+            return Token.Kind.Comment;
+        }
+
+        return Token.Kind.Error;
+    }
+
     private Token.Kind acceptString(){
+        shift();
         mark();
         loop: while(true){
             switch (curr){

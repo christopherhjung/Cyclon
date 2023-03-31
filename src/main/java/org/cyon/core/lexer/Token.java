@@ -16,7 +16,7 @@ public class Token {
         LeftBracket, RightBracket,
         LeftBrace, RightBrace,
         Comma, Semi, Colon,
-        EOL, Error
+        EOL, Error, Comment
     }
 
     public enum Enter{

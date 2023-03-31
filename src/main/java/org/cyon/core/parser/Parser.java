@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Parser {
+    private static final Expr[] EMPTY_EXPR_ARR = new Expr[0];
+    private static final PairExpr[] EMPTY_PAIR_EXPR_ARRAY = new PairExpr[0];
+
     public static Expr parseRaw(String cyclon){
         var lex = new Lexer(cyclon);
         var parser = new Parser(lex);
@@ -35,16 +38,12 @@ public class Parser {
         shift();
     }
 
-    private Token.Kind peek(){
-        return token;
-    }
-
     private void shift(){
         token = lexer.next();
     }
 
     private boolean is(Token.Kind kind){
-        return peek() == kind;
+        return token == kind;
     }
 
     private boolean accept(Token.Kind kind){
@@ -85,17 +84,15 @@ public class Parser {
 
         var valid = true;
         while(!accept(Token.Kind.EOL)){
-            if(!valid){
-                throw new ParseException("Expected ; separator");
-            }
+            if(!valid) throw new ParseException("Expected ; separator");
             exprs.add(parseExpr());
             valid = false;
             while(accept(Token.Kind.Semi)){
                 valid = true;
-            };
+            }
         }
 
-        return new BlockExpr(exprs.toArray(new Expr[0]));
+        return new BlockExpr(exprs.toArray(EMPTY_EXPR_ARR));
     }
 
     public PairExpr parsePair(){
@@ -107,42 +104,56 @@ public class Parser {
 
     public ObjectExpr parseObject(){
         expect(Token.Kind.LeftBrace);
-        var exprs = new ArrayList<PairExpr>();
-        if(!accept(Token.Kind.RightBrace)){
-            exprs.add(parsePair());
-            while(!accept(Token.Kind.RightBrace)){
-                expect(Token.Kind.Comma);
-                exprs.add(parsePair());
-            }
+
+        if(accept(Token.Kind.RightBrace)){
+            return new ObjectExpr(EMPTY_PAIR_EXPR_ARRAY);
         }
 
-        return new ObjectExpr(exprs.toArray(PairExpr[]::new));
+        var first = parsePair();
+        if(accept(Token.Kind.RightBrace)){
+            return new ObjectExpr(new PairExpr[]{first});
+        }
+
+        var exprs = new ArrayList<PairExpr>();
+        exprs.add(first);
+        do{
+            expect(Token.Kind.Comma);
+            exprs.add(parsePair());
+        }while(!accept(Token.Kind.RightBrace));
+
+        return new ObjectExpr(exprs.toArray(EMPTY_PAIR_EXPR_ARRAY));
     }
 
     public ListExpr parseList(){
         expect(Token.Kind.LeftBracket);
-        var exprs = new ArrayList<Expr>();
-        if(!accept(Token.Kind.RightBracket)){
-            exprs.add(parsePrimaryExpr());
-            while(!accept(Token.Kind.RightBracket)){
-                expect(Token.Kind.Comma);
-                exprs.add(parsePrimaryExpr());
-            }
+        if(accept(Token.Kind.RightBracket)){
+            return new ListExpr(EMPTY_EXPR_ARR);
         }
 
-        return new ListExpr(exprs.toArray(Expr[]::new));
+        var first = parsePrimaryExpr();
+
+        if(accept(Token.Kind.RightBracket)){
+            return new ListExpr(new Expr[]{first});
+        }
+
+        var exprs = new ArrayList<Expr>();
+        exprs.add(first);
+        do{
+            expect(Token.Kind.Comma);
+            exprs.add(parsePrimaryExpr());
+        }while(!accept(Token.Kind.RightBracket));
+        return new ListExpr(exprs.toArray(EMPTY_EXPR_ARR));
     }
 
     private Expr parseValueExpr(){
-        var kind = peek();
-        switch (kind){
+        switch (token){
             case LeftBrace: return parseObject();
             case LeftBracket: return parseList();
         }
 
         var symbol = lexer.getSymbol();
         Object value;
-        switch (peek()){
+        switch (token){
             case String:
                 value = symbol;
                 break;
