@@ -12,9 +12,7 @@ public class IdentExpr implements Expr{
     private String key;
     private Expr expr;
 
-    public IdentExpr(){
-
-    }
+    public IdentExpr(){}
 
     public IdentExpr(String key){
         this.key = key;

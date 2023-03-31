@@ -70,11 +70,18 @@ public class ParserTest {
     public void objKeyAsIdentifier(){
         var actualExpr = Parser.parseRaw("key = \"key\"; a = {key: \"value\"}");
         var expectedExpr = block(
-            assign(id("key"), str("key")),
-            assign(id("a"), obj(
-                pair(id("key"), str("value"))
-            ))
+                assign(id("key"), str("key")),
+                assign(id("a"), obj(
+                        pair(id("key"), str("value"))
+                ))
         );
+        assertIdentical(expectedExpr, actualExpr);
+    }
+
+    @Test
+    public void escapingString(){
+        var actualExpr = Parser.parse("\"escaping\\\"string\"");
+        var expectedExpr = str("escaping\"string");
         assertIdentical(expectedExpr, actualExpr);
     }
 

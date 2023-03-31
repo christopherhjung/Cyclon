@@ -164,7 +164,7 @@ public class Parser {
                 value = null;
                 break;
             }
-            default: throw new ParseException("Expected Identifier, String, Boolean or Number");
+            default: throw new ParseException("Expected Identifier, String, Boolean, Number or Null!");
         }
         next();
         return new LiteralExpr(value);

@@ -4,9 +4,9 @@ import org.cyon.core.parser.Parser;
 import org.cyon.core.visitor.Serializer;
 
 public class Mapper {
-    public static <T> T readValue(String cyclon, Class<T> clazz){
-        var ast = Parser.parse(cyclon);
-        return ast.deserialize(clazz);
+    public static <T> T readValue(String str, Class<T> clazz){
+        var expr = Parser.parse(str);
+        return expr.deserialize(clazz);
     }
 
     public static String writeValue(Object obj){
