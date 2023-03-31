@@ -1,11 +1,10 @@
 package org.cyon.core.parser;
 
-import org.cyon.core.parser.ast.*;
-import org.cyon.core.visitor.Binder;
 import org.cyon.core.exception.ParseException;
 import org.cyon.core.lexer.Lexer;
 import org.cyon.core.lexer.Token;
-import org.cyon.parser.ast.*;
+import org.cyon.core.parser.ast.*;
+import org.cyon.core.visitor.Binder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

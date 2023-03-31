@@ -1,7 +1,7 @@
 package org.cyon.core.mapper;
 
 import org.cyon.core.parser.Parser;
-import org.cyon.core.visitor.stringifier.Serializer;
+import org.cyon.core.visitor.Serializer;
 
 public class Mapper {
     public static <T> T readValue(String cyclon, Class<T> clazz){

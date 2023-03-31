@@ -3,7 +3,6 @@ package org.cyon.core.visitor;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
 import org.cyon.core.parser.ast.*;
-import org.cyon.parser.ast.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

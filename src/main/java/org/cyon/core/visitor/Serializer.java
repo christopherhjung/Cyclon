@@ -1,9 +1,8 @@
-package org.cyon.core.visitor.stringifier;
+package org.cyon.core.visitor;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.cyon.core.parser.ast.*;
 import org.cyon.core.exception.SerializeException;
-import org.cyon.parser.ast.*;
+import org.cyon.core.parser.ast.*;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;

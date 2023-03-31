@@ -1,8 +1,6 @@
 package org.cyon.core.visitor.stringifier;
 
 import org.cyon.core.parser.ast.*;
-import org.cyon.parser.ast.*;
-import org.cyon.core.visitor.Stringifier;
 import org.cyon.core.visitor.Visitor;
 
 public class CompactStringifier implements Visitor, Stringifier {

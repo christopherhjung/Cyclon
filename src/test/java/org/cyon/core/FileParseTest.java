@@ -1,7 +1,7 @@
 package org.cyon.core;
 
-import org.cyon.core.parser.Parser;
 import org.cyon.core.mapper.Mapper;
+import org.cyon.core.parser.Parser;
 import org.junit.Test;
 
 import java.io.IOException;

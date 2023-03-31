@@ -3,7 +3,6 @@ package org.cyon.core;
 import org.cyon.core.exception.ParseException;
 import org.cyon.core.parser.Parser;
 import org.cyon.core.parser.ast.*;
-import org.cyon.parser.ast.*;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -111,7 +110,6 @@ public class ParserTest {
     private PairExpr pair(Expr key, Expr value){
         return new PairExpr(key, value);
     }
-
 
     private void assertIdentical(Object expected, Object actual){
         assertThat(actual)

@@ -1,7 +1,6 @@
 package org.cyon.core.visitor;
 
 import org.cyon.core.parser.ast.*;
-import org.cyon.parser.ast.*;
 
 public class Reducer implements ResultVisitor<Expr>{
     public Expr reduce(Expr expr) {

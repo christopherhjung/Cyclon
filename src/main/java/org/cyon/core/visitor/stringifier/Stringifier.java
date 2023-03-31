@@ -1,4 +1,4 @@
-package org.cyon.core.visitor;
+package org.cyon.core.visitor.stringifier;
 
 import org.cyon.core.parser.ast.Expr;
 

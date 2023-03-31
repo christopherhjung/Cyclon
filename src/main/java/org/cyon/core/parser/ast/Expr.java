@@ -3,6 +3,7 @@ package org.cyon.core.parser.ast;
 import org.cyon.core.visitor.*;
 import org.cyon.core.visitor.stringifier.CompactStringifier;
 import org.cyon.core.visitor.stringifier.PrettyStringifier;
+import org.cyon.core.visitor.stringifier.Stringifier;
 
 public interface Expr {
     void visit(Visitor visitor);
