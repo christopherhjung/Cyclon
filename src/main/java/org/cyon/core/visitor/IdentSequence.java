@@ -1,5 +1,5 @@
 package org.cyon.core.visitor;
 
-public interface IdentFactory {
+public interface IdentSequence {
     String next();
 }

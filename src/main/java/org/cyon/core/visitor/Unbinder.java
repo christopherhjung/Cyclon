@@ -4,13 +4,11 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
 import org.cyon.core.parser.ast.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @AllArgsConstructor
 public class Unbinder implements ResultVisitor<Expr>{
-    private final IdentFactory factory = new IdentFactoryImpl();
+    private final IdentSequence factory = new AlphaNumericIdentSequence();
     private final Map<Expr, AssignExpr> map = new HashMap<>();
 
     private Expander expander;
@@ -55,7 +53,13 @@ public class Unbinder implements ResultVisitor<Expr>{
 
     @Override
     public Expr visitLiteral(LiteralExpr literal) {
-        return identify(literal);
+        if(literal.isString()){
+            var str = (String)literal.getValue();
+            if(str.length() > 3){
+                return identify(literal);
+            }
+        }
+        return literal;
     }
 
     @Override

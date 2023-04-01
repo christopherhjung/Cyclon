@@ -21,4 +21,8 @@ public class LiteralExpr implements Expr{
     public <T> T visit(ResultVisitor<T> visitor) {
         return visitor.visitLiteral(this);
     }
+
+    public boolean isString(){
+        return value instanceof String;
+    }
 }
