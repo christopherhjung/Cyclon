@@ -1,5 +1,6 @@
 package org.cyon.core.visitor.stringifier;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.cyon.core.parser.ast.*;
 import org.cyon.core.visitor.Visitor;
 
@@ -55,8 +56,8 @@ public class CompactStringifier implements Visitor, Stringifier {
         if(value == null){
             print("null");
         }else if(value instanceof String){
-            print("\"");
-            print((String)value);
+            print("\"");;
+            print(StringEscapeUtils.escapeJava((String) value));
             print("\"");
         }else{
             print(value.toString());

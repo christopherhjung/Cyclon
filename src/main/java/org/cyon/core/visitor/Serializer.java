@@ -1,6 +1,7 @@
 package org.cyon.core.visitor;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.cyon.core.Key;
 import org.cyon.core.exception.SerializeException;
 import org.cyon.core.parser.ast.*;
 
@@ -13,43 +14,49 @@ import java.util.Map;
 
 public class Serializer{
     private final Map<Object, Expr> map = new HashMap<>();
-    private static final LiteralExpr NULL_EXPR = new LiteralExpr(null);
+    public static final boolean REDUCE = true;
+
+    private Object getKey(Object obj){
+        if(REDUCE){
+            return obj;
+        }else{
+            return new Key(obj);
+        }
+    }
 
     public Expr serialize(Object obj){
-        if(obj == null){
-            return NULL_EXPR;
-        }
+        if(obj == null) return LiteralExpr.NULL;
 
-        if(map.containsKey(obj)){
-            return map.get(obj);
-        }
+        var key = getKey(obj);
+        var expr = map.get(key);
+        if(expr != null)  return expr;
 
         var clazz = obj.getClass();
         if(clazz.isArray()){
-            return serializeArray(obj);
+            return serializeArray(key, obj);
         }else if(ClassUtils.isPrimitiveOrWrapper(clazz)){
-            return serializeValue(obj);
+            return serializeValue(key, obj);
         }else if(String.class.equals(clazz)){
-            return serializeValue(obj);
+            return serializeValue(key, obj);
         }else if(obj instanceof Collection<?>){
-            return serializeCollection(obj);
+            return serializeCollection(key, obj);
         }else if(obj instanceof Map<?,?>){
-            return serializeMap(obj);
+            return serializeMap(key, obj);
         }
 
-        return serializeObject(obj);
+        return serializeObject(key, obj);
     }
 
-    private LiteralExpr serializeValue(Object obj){
+    private LiteralExpr serializeValue(Object key, Object obj){
         var expr = new LiteralExpr(obj);
-        map.put(obj, expr);
+        map.put(key, expr);
         return expr;
     }
 
-    private ListExpr serializeCollection(Object obj){
+    private ListExpr serializeCollection(Object key, Object obj){
         var collection = (Collection<?>) obj;
         var expr = new ListExpr(null);
-        map.put(obj, expr);
+        map.put(key, expr);
         var elems = collection.stream()
                 .map(this::serialize)
                 .toArray(Expr[]::new);
@@ -58,10 +65,10 @@ public class Serializer{
         return expr;
     }
 
-    private ObjectExpr serializeMap(Object obj){
+    private ObjectExpr serializeMap(Object key, Object obj){
         var map = (Map<?,?>) obj;
         var expr = new ObjectExpr(null);
-        this.map.put(obj, expr);
+        this.map.put(key, expr);
         var pairs = map.entrySet()
                 .stream()
                 .map(it -> new PairExpr(
@@ -74,11 +81,11 @@ public class Serializer{
         return expr;
     }
 
-    private ListExpr serializeArray(Object obj){
+    private ListExpr serializeArray(Object key, Object obj){
         var length = Array.getLength(obj);
         var elems = new Expr[length];
         var expr = new ListExpr(elems);
-        map.put(obj, expr);
+        map.put(key, expr);
 
         for(var idx = 0; idx < length ; idx++){
             var elem = Array.get(obj, idx);
@@ -88,11 +95,11 @@ public class Serializer{
         return expr;
     }
 
-    private ObjectExpr serializeObject(Object obj){
+    private ObjectExpr serializeObject(Object key, Object obj){
         var clazz = obj.getClass();
         var pairs = new ArrayList<PairExpr>();
         var expr = new ObjectExpr(null);
-        map.put(obj, expr);
+        map.put(key, expr);
         try{
             for(var field : clazz.getDeclaredFields()){
                 var modifier = field.getModifiers();
@@ -107,7 +114,7 @@ public class Serializer{
                 pairs.add(new PairExpr(keyExpr, valueExpr));
             }
 
-            expr.setPairs(pairs.toArray(new PairExpr[0]));
+            expr.setPairs(pairs.toArray(PairExpr.EMPTY_ARRAY));
             return expr;
         }catch (IllegalAccessException e){
             throw new SerializeException("Error");

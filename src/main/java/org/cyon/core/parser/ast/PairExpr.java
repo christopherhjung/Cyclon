@@ -10,6 +10,8 @@ import org.cyon.core.visitor.Visitor;
 @Getter
 @Setter
 public class PairExpr implements Expr{
+    public static final PairExpr[] EMPTY_ARRAY = new PairExpr[0];
+
     private Expr key;
     private Expr value;
 

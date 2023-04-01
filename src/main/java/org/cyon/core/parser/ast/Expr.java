@@ -6,6 +6,8 @@ import org.cyon.core.visitor.stringifier.PrettyStringifier;
 import org.cyon.core.visitor.stringifier.Stringifier;
 
 public interface Expr {
+    Expr[] EMPTY_ARRAY = new Expr[0];
+
     void visit(Visitor visitor);
     <T> T visit(ResultVisitor<T> visitor);
 

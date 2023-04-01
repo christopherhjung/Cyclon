@@ -6,4 +6,7 @@ import java.util.HashMap;
 
 public class Context extends HashMap<Expr, Object> {
 
+    public Context(){
+        super();
+    }
 }

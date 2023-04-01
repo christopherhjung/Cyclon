@@ -10,9 +10,13 @@ public class Mapper {
     }
 
     public static String writeValue(Object obj){
+        return writeValue(obj, false);
+    }
+
+    public static String writeValue(Object obj, boolean pretty){
         var serializer = new Serializer();
         var expr = serializer.serialize(obj);
         var expanded = expr.expand();
-        return expanded.stringify(true);
+        return expanded.stringify(pretty);
     }
 }

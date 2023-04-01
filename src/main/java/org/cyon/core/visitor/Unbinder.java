@@ -60,11 +60,19 @@ public class Unbinder implements ResultVisitor<Expr>{
 
     @Override
     public Expr visitList(ListExpr list) {
+        if(list.getElems().length == 0){
+            return list;
+        }
+
         return identify(list);
     }
 
     @Override
     public Expr visitObject(ObjectExpr obj) {
+        if(obj.getPairs().length == 0){
+            return obj;
+        }
+
         return identify(obj);
     }
 

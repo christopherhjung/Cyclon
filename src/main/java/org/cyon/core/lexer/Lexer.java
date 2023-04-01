@@ -1,6 +1,8 @@
 package org.cyon.core.lexer;
 
 
+import org.apache.commons.text.StringEscapeUtils;
+
 public class Lexer {
     private final char[] chars;
     private int idx = -1;
@@ -9,8 +11,8 @@ public class Lexer {
     private Token.Enter enter;
     private String symbol;
 
-    public Lexer(String code){
-        this.chars = code.toCharArray();
+    public Lexer(String str){
+        this.chars = str.toCharArray();
         shift();
     }
 
@@ -227,6 +229,19 @@ public class Lexer {
         return Token.Kind.String;
     }
 
+    private char escape(){
+        switch (curr){
+            case '\"': return '\"';
+            case '\\': return '\\';
+            case 'n': return '\n';
+            case 'r': return '\r';
+            case 't': return '\t';
+            case '0': return '\0';
+        }
+
+        return (char)-1;
+    }
+
     private Token.Kind acceptEscapingString(){
         var sb = new StringBuilder();
         loop: while(true){
@@ -235,12 +250,15 @@ public class Lexer {
                 case '\\':
                     sb.append(getString());
                     shift();
+                    sb.append(escape());
+                    shift();
                     mark();
                     break;
-                case -1: return Token.Kind.Error;
+                case -1:
+                    return Token.Kind.Error;
+                default:
+                    shift();
             }
-
-            shift();
         }
 
         sb.append(getString());

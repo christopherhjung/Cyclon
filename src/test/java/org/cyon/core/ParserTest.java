@@ -80,8 +80,22 @@ public class ParserTest {
 
     @Test
     public void escapingString(){
-        var actualExpr = Parser.parse("\"escaping\\\"string\"");
-        var expectedExpr = str("escaping\"string");
+        var actualExpr = Parser.parse("\"escaping\\\"string\\nlineBreak\"");
+        var expectedExpr = str("escaping\"string\nlineBreak");
+        assertIdentical(expectedExpr, actualExpr);
+    }
+
+    @Test
+    public void escapingString2(){
+        var actualExpr = Parser.parse("\"\\\"test\\\"\"");
+        var expectedExpr = str("\"test\"");
+        assertIdentical(expectedExpr, actualExpr);
+    }
+
+    @Test
+    public void escapingString3(){
+        var actualExpr = Parser.parse("\"\\\\\\\"test\\\"\\\\\"");
+        var expectedExpr = str("\\\"test\"\\");
         assertIdentical(expectedExpr, actualExpr);
     }
 

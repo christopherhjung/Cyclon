@@ -11,17 +11,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Parser {
-    private static final Expr[] EMPTY_EXPR_ARR = new Expr[0];
-    private static final PairExpr[] EMPTY_PAIR_EXPR_ARRAY = new PairExpr[0];
 
-    public static Expr parseRaw(String cyclon){
-        var lex = new Lexer(cyclon);
+    public static Expr parseRaw(String str){
+        var lex = new Lexer(str);
         var parser = new Parser(lex);
         return parser.parse();
     }
 
-    public static Expr parse(String cyclon){
-        var lex = new Lexer(cyclon);
+    public static Expr parse(String str){
+        var lex = new Lexer(str);
         var parser = new Parser(lex);
         var ast = parser.parse();
         var binder = new Binder();
@@ -92,7 +90,7 @@ public class Parser {
             }
         }
 
-        return new BlockExpr(exprs.toArray(EMPTY_EXPR_ARR));
+        return new BlockExpr(exprs.toArray(Expr.EMPTY_ARRAY));
     }
 
     public PairExpr parsePair(){
@@ -106,7 +104,7 @@ public class Parser {
         expect(Token.Kind.LeftBrace);
 
         if(accept(Token.Kind.RightBrace)){
-            return new ObjectExpr(EMPTY_PAIR_EXPR_ARRAY);
+            return new ObjectExpr(PairExpr.EMPTY_ARRAY);
         }
 
         var first = parsePair();
@@ -121,17 +119,16 @@ public class Parser {
             exprs.add(parsePair());
         }while(!accept(Token.Kind.RightBrace));
 
-        return new ObjectExpr(exprs.toArray(EMPTY_PAIR_EXPR_ARRAY));
+        return new ObjectExpr(exprs.toArray(PairExpr.EMPTY_ARRAY));
     }
 
     public ListExpr parseList(){
         expect(Token.Kind.LeftBracket);
         if(accept(Token.Kind.RightBracket)){
-            return new ListExpr(EMPTY_EXPR_ARR);
+            return new ListExpr(Expr.EMPTY_ARRAY);
         }
 
         var first = parsePrimaryExpr();
-
         if(accept(Token.Kind.RightBracket)){
             return new ListExpr(new Expr[]{first});
         }
@@ -142,7 +139,7 @@ public class Parser {
             expect(Token.Kind.Comma);
             exprs.add(parsePrimaryExpr());
         }while(!accept(Token.Kind.RightBracket));
-        return new ListExpr(exprs.toArray(EMPTY_EXPR_ARR));
+        return new ListExpr(exprs.toArray(Expr.EMPTY_ARRAY));
     }
 
     private Expr parseValueExpr(){
@@ -170,7 +167,8 @@ public class Parser {
                 value = null;
                 break;
             }
-            default: throw new ParseException("Expected Identifier, String, Boolean, Number or Null!");
+            default:
+                throw new ParseException("Expected Identifier, String, Boolean, Number or Null!");
         }
         shift();
         return new LiteralExpr(value);

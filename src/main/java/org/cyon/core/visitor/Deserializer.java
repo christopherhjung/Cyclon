@@ -5,8 +5,7 @@ import org.cyon.core.mapper.Context;
 import org.cyon.core.parser.ast.*;
 
 import java.lang.reflect.Array;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Deserializer implements ResultVisitor<Object>{
     private final Context context = new Context();
@@ -31,6 +30,18 @@ public class Deserializer implements ResultVisitor<Object>{
             return context.get(list);
         }
 
+        Object arr;
+        if(clazz.isArray()){
+            arr = deserializeArray(list);
+        }else{
+            arr = deserializeList(list);
+        }
+
+        //context.remove(list);
+        return arr;
+    }
+
+    private Object deserializeArray(ListExpr list){
         var componentType = clazz.getComponentType();
         if(componentType == null){
             componentType = Object.class;
@@ -45,7 +56,23 @@ public class Deserializer implements ResultVisitor<Object>{
             Array.set(arr, idx++, elem.visit(this));
         }
 
-        context.remove(list);
+        return arr;
+    }
+
+    private Object deserializeList(ListExpr list){
+        var componentType = clazz.getComponentType();
+        if(componentType == null){
+            componentType = Object.class;
+        }
+
+        var elems = list.getElems();
+        var arr = new ArrayList<>();
+        context.put(list, arr);
+        for(var elem : elems){
+            clazz = componentType;
+            arr.add(elem.visit(this));
+        }
+
         return arr;
     }
 
@@ -59,16 +86,16 @@ public class Deserializer implements ResultVisitor<Object>{
         if(Map.class.isAssignableFrom(clazz) || Object.class.equals(clazz)){
             obj = deserializeMap(expr);
         }else{
-            obj = deserializePOJO(expr);
+            obj = deserializeObject(expr);
         }
 
-        context.remove(expr);
+        //context.remove(expr);
         return obj;
     }
 
 
     public Map<?,?> deserializeMap(ObjectExpr expr){
-        var obj = new HashMap<>();
+        var obj = new LinkedHashMap<>(4);
         context.put(expr, obj);
 
         var pairs = expr.getPairs();
@@ -83,7 +110,7 @@ public class Deserializer implements ResultVisitor<Object>{
         return obj;
     }
 
-    public Object deserializePOJO(ObjectExpr expr){
+    public Object deserializeObject(ObjectExpr expr){
         try {
             var currentClazz = clazz;
             var creator = currentClazz.getConstructor();
