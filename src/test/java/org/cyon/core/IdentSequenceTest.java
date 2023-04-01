@@ -1,6 +1,6 @@
 package org.cyon.core;
 
-import org.cyon.core.visitor.AlphaNumericIdentSequence;
+import org.cyon.core.visitor.sequence.AlphaNumericIdentSequence;
 import org.junit.Test;
 
 import java.io.IOException;

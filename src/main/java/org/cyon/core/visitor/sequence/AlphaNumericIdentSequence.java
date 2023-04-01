@@ -1,4 +1,4 @@
-package org.cyon.core.visitor;
+package org.cyon.core.visitor.sequence;
 
 public class AlphaNumericIdentSequence implements IdentSequence {
     private static final char[] CHARS = new char[62];

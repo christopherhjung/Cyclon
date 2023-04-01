@@ -3,6 +3,8 @@ package org.cyon.core.visitor;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
 import org.cyon.core.parser.ast.*;
+import org.cyon.core.visitor.sequence.AlphaNumericIdentSequence;
+import org.cyon.core.visitor.sequence.IdentSequence;
 
 import java.util.*;
 
