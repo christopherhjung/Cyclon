@@ -2,17 +2,17 @@ package org.cyon.core.visitor;
 
 public class IdentFactoryImpl implements IdentFactory{
     private static final char[] CHARS = new char[2 * 26 + 10];
-    private static final int FIRST_WIDTH = 26;
-    private static final int REMAINING_WIDTH = 26;
+    private static final int FIRST_WIDTH = 62;
+    private static final int REMAINING_WIDTH = 62;
     static{
         for(var i = 0; i < CHARS.length ; i++ ){
             char cha;
-            if(i < 26){
-                cha = (char)(i + 'A');
-            }else if(i < 52){
-                cha = (char)(i - 26 + 'a');
+            if(i < 10){
+                cha = (char)(i + '0');
+            }else if(i < 36){
+                cha = (char)(i - 10 + 'a');
             }else{
-                cha = (char)(i - 52 + '0');
+                cha = (char)(i - 36 + 'A');
             }
             CHARS[i] = cha;
         }

@@ -66,6 +66,7 @@ public class CompactStringifier implements Visitor, Stringifier {
 
     @Override
     public void visitIdent(IdentExpr ident) {
+        print("$");
         print(ident.getKey());
     }
 

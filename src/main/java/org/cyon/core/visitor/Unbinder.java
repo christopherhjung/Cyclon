@@ -55,7 +55,7 @@ public class Unbinder implements ResultVisitor<Expr>{
 
     @Override
     public Expr visitLiteral(LiteralExpr literal) {
-        return literal;
+        return identify(literal);
     }
 
     @Override

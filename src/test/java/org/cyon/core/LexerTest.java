@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNull;
 public class LexerTest {
     @Test
     public void simpleLexTest(){
-        var lexer = new Lexer("a = \"2\"; b = 3");
+        var lexer = new Lexer("$a = \"2\"; $b = 3");
 
         var token1 = lexer.next();
         Assert.assertEquals(Token.Kind.Ident, token1);

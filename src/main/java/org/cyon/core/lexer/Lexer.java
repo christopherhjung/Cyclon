@@ -1,7 +1,7 @@
 package org.cyon.core.lexer;
 
 
-import org.apache.commons.text.StringEscapeUtils;
+import org.cyon.core.exception.LexerException;
 
 public class Lexer {
     private final char[] chars;
@@ -35,6 +35,14 @@ public class Lexer {
         }
 
         return false;
+    }
+
+    public boolean expect(int cha){
+        if(accept(cha)){
+            return true;
+        }
+
+        throw new LexerException("Expedted " + cha);
     }
 
     private boolean isNumeric(){
@@ -109,6 +117,7 @@ public class Lexer {
             case ';': shift(); return Token.Kind.Semi;
             case ':': shift(); return Token.Kind.Colon;
             case '\"': return acceptString();
+            case '$': return acceptIdent();
             default: return null;
         }
     }
@@ -141,14 +150,7 @@ public class Lexer {
             }
 
             if(isAlpha()){
-                mark();
-                shift();
-
-                while(isAlphaNumeric()){
-                    shift();
-                }
-
-                symbol = getString();
+                acceptAlphaNumeric();
                 switch (symbol) {
                     case "true":
                     case "false": return Token.Kind.Boolean;
@@ -174,6 +176,23 @@ public class Lexer {
         }
 
         return Token.Kind.EOL;
+    }
+
+
+    private Token.Kind acceptIdent(){
+        expect('$');
+        acceptAlphaNumeric();
+        return Token.Kind.Ident;
+    }
+
+    private void acceptAlphaNumeric(){
+        mark();
+        shift();
+        while(isAlphaNumeric()){
+            shift();
+        }
+
+        symbol = getString();
     }
 
     private Token.Kind acceptComment(){
