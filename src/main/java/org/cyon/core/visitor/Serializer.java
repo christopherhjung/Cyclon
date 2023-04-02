@@ -17,7 +17,7 @@ public class Serializer{
     public static final boolean REDUCE = false;
 
     private Object getKey(Object obj){
-        if(REDUCE){
+        if(REDUCE || obj instanceof String){
             return obj;
         }else{
             return new Key(obj);
