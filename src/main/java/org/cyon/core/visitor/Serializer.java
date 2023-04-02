@@ -55,24 +55,22 @@ public class Serializer{
 
     private ListExpr serializeCollection(Object key, Object obj){
         var collection = (Collection<?>) obj;
-        var expr = new ListExpr(null);
-        map.put(key, expr);
-
         var elems = new Expr[collection.size()];
+        var expr = new ListExpr(elems);
+        map.put(key, expr);
 
         var idx = 0;
         for( var it : collection ){
             elems[idx++] = serialize(it);
         }
-        expr.setElems(elems);
         return expr;
     }
 
     private ObjectExpr serializeMap(Object key, Object obj){
         var map = (Map<?,?>) obj;
-        var expr = new ObjectExpr(null);
-        this.map.put(key, expr);
         var pairs = new PairExpr[map.size()];
+        var expr = new ObjectExpr(pairs);
+        this.map.put(key, expr);
 
         var idx = 0;
         for( var it : map.entrySet() ){
@@ -82,7 +80,6 @@ public class Serializer{
             );
         }
 
-        expr.setPairs(pairs);
         return expr;
     }
 

@@ -7,7 +7,7 @@ import org.cyon.core.visitor.Visitor;
 
 @AllArgsConstructor
 @Getter
-public class LiteralExpr implements Expr{
+public class LiteralExpr extends Expr{
     public static final LiteralExpr NULL = new LiteralExpr(null);
 
     private final Object value;

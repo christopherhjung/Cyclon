@@ -7,7 +7,7 @@ import org.cyon.core.visitor.Visitor;
 
 @AllArgsConstructor
 @Getter
-public class BlockExpr implements Expr{
+public class BlockExpr extends Expr{
     private Expr[] exprs;
 
     @Override

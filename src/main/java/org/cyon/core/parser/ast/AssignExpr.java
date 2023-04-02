@@ -9,7 +9,7 @@ import org.cyon.core.visitor.Visitor;
 @AllArgsConstructor
 @Getter
 @Setter
-public class AssignExpr implements Expr{
+public class AssignExpr extends Expr{
     private IdentExpr key;
     private Expr value;
 

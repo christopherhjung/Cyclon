@@ -9,7 +9,7 @@ import org.cyon.core.visitor.Visitor;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PairExpr implements Expr{
+public class PairExpr extends Expr{
     public static final PairExpr[] EMPTY_ARRAY = new PairExpr[0];
 
     private Expr key;

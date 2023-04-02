@@ -10,7 +10,7 @@ import org.cyon.core.visitor.Visitor;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ObjectExpr implements Expr{
+public class ObjectExpr extends Expr{
     private PairExpr[] pairs;
 
     @Override

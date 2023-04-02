@@ -33,9 +33,9 @@ public class Reducer implements ResultVisitor<Expr>{
 
     @Override
     public Expr visitIdent(IdentExpr ident) {
-        return ident.getExpr() == null ?
+        return ident.getAlt() == null ?
                 ident :
-                ident.getExpr();
+                ident.getAlt();
     }
 
     @Override

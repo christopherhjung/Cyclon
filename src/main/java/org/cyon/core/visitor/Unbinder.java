@@ -11,40 +11,42 @@ import java.util.*;
 @AllArgsConstructor
 public class Unbinder implements ResultVisitor<Expr>{
     private final IdentSequence factory = new AlphaNumericIdentSequence();
-    private final Map<Expr, AssignExpr> map = new HashMap<>();
 
     private Expander expander;
+    private final List<AssignExpr> assigns = new ArrayList<>();
 
     public IdentExpr identify(Expr expr){
-        var assignExpr = map.get(expr);
-        if(assignExpr != null){
+        var alt = expr.getAlt();
+        AssignExpr assignExpr;
+        if(alt != null){
+            assignExpr = (AssignExpr) alt;
             var key = assignExpr.getKey();
-            key.assign(expr, false);
+            key.setAlt(expr);
             return key;
         }
 
         var ident = new IdentExpr(null);
         assignExpr = new AssignExpr(ident, null);
-        map.put(expr, assignExpr);
+        expr.setAlt(assignExpr);
         assignExpr.setValue(expr.visit(expander));
+        assigns.add(assignExpr);
         return ident;
     }
 
     public Expr collect(IdentExpr root){
-        var assigns = map.values();
         assigns.forEach(it -> it.getKey().toggle(it.getValue()));
         assigns.forEach(Expr::reduce);
 
         var exprs = new ArrayList<Expr>();
         for(var assign : assigns){
             var key = assign.getKey();
-            if(key.getExpr() == null){
+            if(key.getAlt() == null){
                 key.setKey(factory.next());
                 exprs.add(assign);
             }
         }
 
-        var normalizedRoot = root.getExpr() == null ? root : root.getExpr();
+        var normalizedRoot = root.getAlt() == null ? root : root.getAlt();
         if(exprs.isEmpty()){
             return normalizedRoot;
         }

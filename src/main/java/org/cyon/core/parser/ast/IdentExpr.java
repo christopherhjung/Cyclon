@@ -8,25 +8,13 @@ import org.cyon.core.visitor.Visitor;
 
 @Getter
 @Setter
-public class IdentExpr implements Expr{
+public class IdentExpr extends Expr{
     private String key;
-    private Expr expr;
 
     public IdentExpr(){}
 
     public IdentExpr(String key){
         this.key = key;
-    }
-
-    public void assign(Expr value, boolean check){
-        if(expr != null && check){
-            throw new ParseException("Double assign");
-        }
-        this.expr = value;
-    }
-
-    public void toggle(Expr value){
-        expr = expr == null ? value : null;
     }
 
     @Override

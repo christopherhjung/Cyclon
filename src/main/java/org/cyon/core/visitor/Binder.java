@@ -9,7 +9,11 @@ public class Binder implements Visitor{
 
     @Override
     public void visitAssign(AssignExpr assign) {
-        assign.getKey().assign(assign.getValue(), true);
+        var key = assign.getKey();
+        if(key.getAlt() != null){
+            throw new RuntimeException("Assign twice not possible!");
+        }
+        key.setAlt(assign.getValue());
     }
 
     @Override
