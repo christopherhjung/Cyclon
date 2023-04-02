@@ -50,14 +50,30 @@ public class CompactStringifier implements Visitor, Stringifier {
         print("}");
     }
 
+    public void printEscaped(String str){
+        for( char cha : str.toCharArray() ){
+            switch (cha){
+                case '\n': sb.append("\\n"); break;
+                case '\r': sb.append("\\r"); break;
+                case '\t': sb.append("\\t"); break;
+                case '\f': sb.append("\\f"); break;
+                case '\b': sb.append("\\b"); break;
+                case '\"': sb.append("\\\""); break;
+                case '\\': sb.append("\\\\"); break;
+                default: sb.append(cha);
+            }
+        }
+    }
+
     @Override
     public void visitLiteral(LiteralExpr literal) {
         var value = literal.getValue();
         if(value == null){
             print("null");
         }else if(value instanceof String){
-            print("\"");;
-            print(StringEscapeUtils.escapeJava((String) value));
+            print("\"");
+            printEscaped((String) value);
+            //print(StringEscapeUtils.escapeJava((String) value));
             print("\"");
         }else{
             print(value.toString());

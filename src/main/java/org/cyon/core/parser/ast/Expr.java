@@ -27,12 +27,7 @@ public interface Expr {
     }
 
     default String stringify(boolean pretty){
-        Stringifier stringifier;
-        if(pretty){
-            stringifier = new PrettyStringifier();
-        }else{
-            stringifier = new CompactStringifier();
-        }
+        var stringifier = new PrettyStringifier(pretty);
         return stringifier.stringify(this);
     }
 }

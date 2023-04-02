@@ -37,7 +37,6 @@ public class Deserializer implements ResultVisitor<Object>{
             arr = deserializeList(list);
         }
 
-        //context.remove(list);
         return arr;
     }
 
@@ -89,7 +88,6 @@ public class Deserializer implements ResultVisitor<Object>{
             obj = deserializeObject(expr);
         }
 
-        //context.remove(expr);
         return obj;
     }
 

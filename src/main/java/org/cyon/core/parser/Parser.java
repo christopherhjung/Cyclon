@@ -65,6 +65,16 @@ public class Parser {
         return result;
     }
 
+    private boolean acceptOrNl(Token.Kind kind){
+        return accept(kind) || lexer.getEnter() == Token.Enter.NL;
+    }
+
+    private void expectOrNl(Token.Kind kind){
+        if(!acceptOrNl(kind)){
+            throw new ParseException("Expected " + kind + " nr new line");
+        }
+    }
+
     private IdentExpr parseIdent(boolean expect){
         if(is(Token.Kind.Ident)){
             var symbol = lexer.getSymbol();
@@ -84,10 +94,7 @@ public class Parser {
         while(!accept(Token.Kind.EOL)){
             if(!valid) throw new ParseException("Expected ; separator");
             exprs.add(parseExpr());
-            valid = false;
-            while(accept(Token.Kind.Semi)){
-                valid = true;
-            }
+            valid = accept(Token.Kind.Semi);
         }
 
         return new BlockExpr(exprs.toArray(Expr.EMPTY_ARRAY));

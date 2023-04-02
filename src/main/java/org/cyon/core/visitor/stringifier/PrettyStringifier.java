@@ -4,11 +4,18 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.cyon.core.parser.ast.*;
 import org.cyon.core.visitor.Visitor;
 
+import java.util.regex.Pattern;
+
 public class PrettyStringifier implements Visitor, Stringifier {
     private static final int WIDTH = 4;
     private final StringBuilder sb = new StringBuilder();
     private int depth = 0;
     private boolean init = true;
+    private boolean pretty;
+
+    public PrettyStringifier(boolean pretty){
+        this.pretty = pretty;
+    }
 
     @Override
     public String stringify(Expr expr){
@@ -28,12 +35,13 @@ public class PrettyStringifier implements Visitor, Stringifier {
     }
 
     private void nl(){
+        if(!pretty) return;
         sb.append("\n");
         init = true;
     }
 
     private void print(String str){
-        if(init){
+        if(pretty && init){
             init = false;
             sb.append(" ".repeat(depth));
         }
@@ -79,6 +87,21 @@ public class PrettyStringifier implements Visitor, Stringifier {
         print("}");
     }
 
+    public void printEscaped(String str){
+        for( char cha : str.toCharArray() ){
+            switch (cha){
+                case '\n': sb.append("\\n"); break;
+                case '\r': sb.append("\\r"); break;
+                case '\t': sb.append("\\t"); break;
+                case '\f': sb.append("\\f"); break;
+                case '\b': sb.append("\\b"); break;
+                case '\"': sb.append("\\\""); break;
+                case '\\': sb.append("\\\\"); break;
+                default: sb.append(cha);
+            }
+        }
+    }
+
     @Override
     public void visitLiteral(LiteralExpr literal) {
         var value = literal.getValue();
@@ -86,7 +109,7 @@ public class PrettyStringifier implements Visitor, Stringifier {
             print("null");
         }else if(value instanceof String){
             print("\"");
-            print(StringEscapeUtils.escapeJava((String) value));
+            printEscaped((String) value);
             print("\"");
         }else{
             print(value.toString());
@@ -102,7 +125,11 @@ public class PrettyStringifier implements Visitor, Stringifier {
     @Override
     public void visitAssign(AssignExpr assign) {
         assign.getKey().visit(this);
-        print(" = ");
+        if(pretty){
+            print(" = ");
+        }else{
+            print("=");
+        }
         assign.getValue().visit(this);
     }
 
@@ -122,7 +149,11 @@ public class PrettyStringifier implements Visitor, Stringifier {
     @Override
     public void visitPair(PairExpr pair) {
         pair.getKey().visit(this);
-        print(" : ");
+        if(pretty){
+            print(" : ");
+        }else{
+            print(":");
+        }
         pair.getValue().visit(this);
     }
 }

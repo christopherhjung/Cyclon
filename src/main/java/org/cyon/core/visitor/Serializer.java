@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Serializer{
     private final Map<Object, Expr> map = new HashMap<>();
-    public static final boolean REDUCE = true;
+    public static final boolean REDUCE = false;
 
     private Object getKey(Object obj){
         if(REDUCE){
@@ -57,10 +57,13 @@ public class Serializer{
         var collection = (Collection<?>) obj;
         var expr = new ListExpr(null);
         map.put(key, expr);
-        var elems = collection.stream()
-                .map(this::serialize)
-                .toArray(Expr[]::new);
 
+        var elems = new Expr[collection.size()];
+
+        var idx = 0;
+        for( var it : collection ){
+            elems[idx++] = serialize(it);
+        }
         expr.setElems(elems);
         return expr;
     }
@@ -69,13 +72,15 @@ public class Serializer{
         var map = (Map<?,?>) obj;
         var expr = new ObjectExpr(null);
         this.map.put(key, expr);
-        var pairs = map.entrySet()
-                .stream()
-                .map(it -> new PairExpr(
-                    serialize(it.getKey()),
-                    serialize(it.getValue())
-                ))
-                .toArray(PairExpr[]::new);
+        var pairs = new PairExpr[map.size()];
+
+        var idx = 0;
+        for( var it : map.entrySet() ){
+            pairs[idx++] = new PairExpr(
+                serialize(it.getKey()),
+                serialize(it.getValue())
+            );
+        }
 
         expr.setPairs(pairs);
         return expr;

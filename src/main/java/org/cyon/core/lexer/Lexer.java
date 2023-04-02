@@ -20,6 +20,10 @@ public class Lexer {
         return symbol;
     }
 
+    public Token.Enter getEnter() {
+        return enter;
+    }
+
     private void shift(){
         curr = ++idx >= chars.length ? -1 : chars[idx];
     }
